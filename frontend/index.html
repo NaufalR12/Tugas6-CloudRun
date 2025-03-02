@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Modern Notes App</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    />
+    <link rel="stylesheet" href="style/style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="script/script.js" defer></script>
+  </head>
+  <body class="bg-gray-900 text-gray-200 font-sans flex flex-col min-h-screen">
+    <header
+      class="bg-gray-800 shadow-md p-4 flex flex-col gap-4 items-center text-white"
+    >
+      <h1 class="text-3xl font-bold">Notes App</h1>
+      <button
+        id="addNoteBtn"
+        class="fixed bottom-8 right-8 z-50 bg-blue-500 hover:bg-blue-600 text-white p-4 rounded-full shadow-lg"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="w-6 h-6"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="white"
+          stroke-width="2"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M12 4v16m8-8H4"
+          />
+        </svg>
+      </button>
+    </header>
+
+    <div class="p-6">
+      <div class="relative w-full mb-4">
+        <i
+          class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+        ></i>
+        <input
+          type="text"
+          id="searchInput"
+          placeholder="Cari catatan.."
+          class="w-full p-2 pl-10 bg-gray-700 text-white rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+        />
+      </div>
+
+      <div
+        id="notesContainer"
+        class="grid grid-cols-1 md:grid-cols-3 gap-4 items-start"
+      ></div>
+    </div>
+
+    <div class="p-6">
+      <div
+        id="notesContainer"
+        class="grid grid-cols-1 md:grid-cols-3 gap-4 items-start"
+      ></div>
+    </div>
+
+    <div
+      id="noteForm"
+      class="hidden fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center"
+    >
+      <div class="bg-gray-900 p-6 rounded-lg w-[800px]">
+        <h2 class="text-xl mb-4" id="formTitle">New Note</h2>
+        <input type="hidden" id="noteId" />
+        <input
+          type="text"
+          id="noteTitle"
+          placeholder="Judul"
+          class="w-full p-2 mb-2 bg-gray-700 text-white rounded"
+        />
+        <textarea
+          id="noteContent"
+          placeholder="Tulis catatan disini..."
+          class="w-full h-60 p-2 bg-gray-700 text-white rounded"
+        ></textarea>
+        <div class="flex justify-between mt-4">
+          <button id="saveNote" class="bg-green-500 px-4 py-2 rounded-md">
+            Save
+          </button>
+          <button id="cancelForm" class="bg-gray-500 px-4 py-2 rounded-md">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
