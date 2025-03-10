@@ -3,9 +3,9 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 const db = mysql.createConnection({
-  host: "localhost",
+  host: "34.16.2.68",
   user: "root",
-  password: "",
+  password: "iniguenopal112358",
   database: "notes_db",
 });
 

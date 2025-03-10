@@ -4,10 +4,13 @@ const db = require("../config/Database");
 
 router.get("/notes", async (req, res) => {
   try {
-    db.query("SELECT * FROM notes ORDER BY created_at DESC", (err, results) => {
-      if (err) throw err;
-      res.json(results);
-    });
+    db.query(
+      "SELECT id, title, content, CONVERT_TZ(created_at, '+00:00', '+07:00') AS created_at FROM notes ORDER BY created_at DESC",
+      (err, results) => {
+        if (err) throw err;
+        res.json(results);
+      }
+    );
   } catch (error) {
     res.status(500).json({ error: "Failed to retrieve notes" });
   }
@@ -17,7 +20,7 @@ router.post("/notes", async (req, res) => {
   try {
     const { title, content } = req.body;
     db.query(
-      "INSERT INTO notes (title, content) VALUES (?, ?)",
+      "INSERT INTO notes (title, content, created_at) VALUES (?, ?, UTC_TIMESTAMP())",
       [title, content],
       (err, result) => {
         if (err) throw err;
@@ -25,7 +28,7 @@ router.post("/notes", async (req, res) => {
           id: result.insertId,
           title,
           content,
-          created_at: new Date(),
+          created_at: new Date().toISOString(), // Menggunakan UTC di frontend
         });
       }
     );
