@@ -1,8 +1,10 @@
 runtime: static
+
 handlers:
   - url: /
     static_files: index.html
     upload: index.html
+
   - url: /(.*)
     static_files: \1
-    upload: (.*)
+    upload: .*\.(html|css|js|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|otf|eot|ttf|map)
