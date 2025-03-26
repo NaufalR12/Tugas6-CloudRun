@@ -1,4 +1,4 @@
-runtime: static
+runtime: python39  # Gunakan runtime Python 3.9 agar bisa serve file statis
 
 handlers:
   - url: /
@@ -7,4 +7,4 @@ handlers:
 
   - url: /(.*)
     static_files: \1
-    upload: .*\.(html|css|js|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|otf|eot|ttf|map)
+    upload: (.*)
