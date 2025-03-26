@@ -1,13 +1,12 @@
 steps:
-  # Step 1: Sinkronisasi file frontend ke Cloud Storage
-  - name: "gcr.io/cloud-builders/gsutil"
-    args: ["-m", "rsync", "-r", ".", "gs://$PROJECT_ID-frontend-nopal"]
-    dir: "notes_fe"
-
-  # Step 2: Deploy ke App Engine
   - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
-    args: ["app", "deploy", "--quiet"]
-    dir: "notes_fe"
+    entrypoint: "bash"
+    args:
+      [
+        "-c",
+        "gcloud config set app/cloud_build_timeout 1600 && gcloud app deploy",
+      ]
+timeout: "1600s"
 
 options:
   logging: CLOUD_LOGGING_ONLY
