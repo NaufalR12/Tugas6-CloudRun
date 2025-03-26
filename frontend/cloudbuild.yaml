@@ -1,5 +1,5 @@
 steps:
-  - name: 'gcr.io/cloud-builders/gsutil'
-    args: ['-m', 'rsync', '-r', '.', 'gs://$PROJECT_ID-notes-frontend']
-  - name: 'gcr.io/cloud-builders/gcloud'
-    args: ['app', 'deploy', '--project', '$PROJECT_ID']
+  - name: "gcr.io/cloud-builders/gsutil"
+    args: ["-m", "rsync", "-r", ".", "gs://$PROJECT_ID-frontend-nopal"]
+  - name: "gcr.io/cloud-builders/gcloud"
+    args: ["app", "deploy", "--project", "$PROJECT_ID"]
