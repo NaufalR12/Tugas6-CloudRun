@@ -1,5 +1,5 @@
 const apiUrl =
-  "https://backend-tugas5-505940949397.us-central1.run.app/api/notes";
+  "https://backend-nopal-505940949397.us-central1.run.app/api/notes";
 
 document.getElementById("addNoteBtn").addEventListener("click", () => {
   document.getElementById("formTitle").innerText = "New Note";
