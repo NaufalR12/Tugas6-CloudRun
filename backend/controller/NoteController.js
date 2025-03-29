@@ -5,7 +5,7 @@ const db = require("../config/Database");
 router.get("/notes", async (req, res) => {
   try {
     db.query(
-      "SELECT id, title, content, CONVERT_TZ(created_at, '+00:00', '+07:00') AS created_at FROM notes ORDER BY created_at DESC",
+      "SELECT id, title, content, CONVERT_TZ(created_at, '+00:00', '+00:00') AS created_at FROM notes ORDER BY created_at DESC", //waktunya gak perlu di tambahlagi
       (err, results) => {
         if (err) throw err;
         res.json(results);
