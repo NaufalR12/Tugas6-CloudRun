@@ -1,7 +1,7 @@
 steps:
   - name: "gcr.io/cloud-builders/docker"
-    dir: "backend"  # Pastikan Dockerfile dan .dockerignore ada di folder ini
     args: ["build", "-t", "gcr.io/$PROJECT_ID/backend-nopal", "."]
+    dir: "backend"
 
   - name: "gcr.io/cloud-builders/docker"
     args: ["push", "gcr.io/$PROJECT_ID/backend-nopal"]
