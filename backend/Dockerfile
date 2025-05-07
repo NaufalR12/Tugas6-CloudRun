@@ -1,18 +1,20 @@
-FROM node:20-alpine
+# Install dependencies needed to compile bcrypt
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    python3 \
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
-# Salin hanya file yang dibutuhkan untuk install awal
+# Copy package.json and package-lock.json
 COPY package*.json ./
 
-# Install di dalam container Linux (penting agar bcrypt dibangun dengan benar)
+# Install dependencies (including bcrypt)
 RUN npm install
 
-# Salin semua file proyek ke dalam container
+# Copy the rest of your app
 COPY . .
 
 EXPOSE 5000
 
-# Jalankan aplikasi
-CMD ["npm", "start"]
-
+CMD ["npm", "index.js"]
