@@ -1,10 +1,10 @@
 FROM node:20-alpine
 
 # Install dependencies needed to compile bcrypt
-RUN apt-get update && apt-get install -y \
-    build-essential \
+RUN apk update && apk add --no-cache \
+    build-base \
     python3 \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/cache/apk/*
 
 WORKDIR /app
 
@@ -20,4 +20,25 @@ COPY . .
 EXPOSE 5000
 
 CMD ["npm", "start"]
+FROM node:20-alpine
 
+# Install dependencies needed to compile bcrypt
+RUN apk update && apk add --no-cache \
+    build-base \
+    python3 \
+    && rm -rf /var/cache/apk/*
+
+WORKDIR /app
+
+# Copy package.json and package-lock.json
+COPY package*.json ./
+
+# Install dependencies
+RUN npm install
+
+# Copy the rest of your application
+COPY . .
+
+EXPOSE 5000
+
+CMD ["npm", "start"]
