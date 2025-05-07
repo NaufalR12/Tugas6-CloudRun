@@ -1,11 +1,10 @@
-const express = require("express");
-const router = express.Router();
+// controllers/NoteController.js
 const db = require("../config/Database");
 
-router.get("/notes", async (req, res) => {
+const getNotes = async (req, res) => {
   try {
     db.query(
-      "SELECT id, title, content, CONVERT_TZ(created_at, '+00:00', '+00:00') AS created_at FROM notes ORDER BY created_at DESC", //waktunya gak perlu di tambahlagi
+      "SELECT id, title, content, CONVERT_TZ(created_at, '+00:00', '+00:00') AS created_at FROM notes ORDER BY created_at DESC",
       (err, results) => {
         if (err) throw err;
         res.json(results);
@@ -14,9 +13,9 @@ router.get("/notes", async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: "Failed to retrieve notes" });
   }
-});
+};
 
-router.post("/notes", async (req, res) => {
+const addNote = async (req, res) => {
   try {
     const { title, content } = req.body;
     db.query(
@@ -28,16 +27,16 @@ router.post("/notes", async (req, res) => {
           id: result.insertId,
           title,
           content,
-          created_at: new Date().toISOString(), // Menggunakan UTC di frontend
+          created_at: new Date().toISOString(),
         });
       }
     );
   } catch (error) {
     res.status(500).json({ error: "Failed to add note" });
   }
-});
+};
 
-router.put("/notes/:id", async (req, res) => {
+const updateNote = async (req, res) => {
   try {
     const { title, content } = req.body;
     db.query(
@@ -51,9 +50,9 @@ router.put("/notes/:id", async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: "Failed to update note" });
   }
-});
+};
 
-router.delete("/notes/:id", async (req, res) => {
+const deleteNote = async (req, res) => {
   try {
     db.query("DELETE FROM notes WHERE id = ?", [req.params.id], (err) => {
       if (err) throw err;
@@ -62,6 +61,11 @@ router.delete("/notes/:id", async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: "Failed to delete note" });
   }
-});
+};
 
-module.exports = router;
+module.exports = {
+  getNotes,
+  addNote,
+  updateNote,
+  deleteNote,
+};

@@ -1,0 +1,50 @@
+GET http://localhost:5000/users
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NywibmFtZSI6ImJlYmFzIiwiZW1haWwiOiJiZWJhc0BnbWFpbCIsImdlbmRlciI6ImJlYmFzIiwiY3JlYXRlZEF0IjoiMjAyNS0wNS0wNVQwNzozOTo0My4wMDBaIiwidXBkYXRlZEF0IjoiMjAyNS0wNS0wNVQwNzo0NDo0OC4wMDBaIiwiaWF0IjoxNzQ2NDMxMDk4LCJleHAiOjE3NDY0MzExMjh9.icgsUQPyZW_NDbECYiPsOo70MVkQOlnG1lzAHPDhJgs
+
+###
+
+POST http://localhost:5000/register
+Content-Type: application/json
+
+{
+    "name":"bebas",
+    "email":"bebas@gmail",
+    "gender":"bebas",
+    "password":"bebas"
+}
+
+###
+
+POST http://localhost:5000/login
+Content-Type: application/json
+
+{
+    "email":"bebas@gmail",
+    "password":"bebas"
+}
+
+###
+
+POST http://localhost:5000/add-user 
+Content-Type: application/json
+
+{
+    "name": "tes",
+    "email": "tes@tes.com",
+    "gender": "Male"
+}
+
+### 
+
+PUT http://localhost:5000/edit-user/14
+Content-Type: application/json
+
+{
+    "name": "tessss",
+    "email": "tesss@tessss.com",
+    "gender": "Male"
+}
+
+###
+
+DELETE http://localhost:5000/delete-user/17
