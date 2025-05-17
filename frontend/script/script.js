@@ -1,5 +1,7 @@
-const apiUserUrl = "http://localhost:5000/api/users";
-const apiNotesUrl = "http://localhost:5000/api/note/notes";
+const apiUserUrl =
+  "https://backend-nopal-505940949397.us-central1.run.app/api/users";
+const apiNotesUrl =
+  "https://backend-nopal-505940949397.us-central1.run.app/api/note/notes";
 
 const tokenKey = "accessToken";
 

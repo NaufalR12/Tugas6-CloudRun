@@ -1,4 +1,4 @@
-GET http://localhost:5000/api/users 
+GET https://backend-nopal-505940949397.us-central1.run.app/api/users 
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibmFtZSI6ImJlYmFzIiwiZW1haWwiOiJiZWJhc0BnbWFpbCIsImdlbmRlciI6ImJlYmFzIiwiY3JlYXRlZEF0IjoiMjAyNS0wNS0wOFQwMzoxODoxOC4wMDBaIiwidXBkYXRlZEF0IjoiMjAyNS0wNS0xNlQxMzoxNDowMC4wMDBaIiwiaWF0IjoxNzQ3NDAyNDI1LCJleHAiOjE3NDc0ODg4MjV9.oEsg1JlJO15jO3M1yA2uPukVxn0ZiKbTaS59hAiwR8o
 
 POST http://localhost:5000/api/users/register
@@ -13,7 +13,7 @@ Content-Type: application/json
 
 ###
 
-POST http://localhost:5000/api/users/login
+POST https://backend-nopal-505940949397.us-central1.run.app/api/users/login
 Content-Type: application/json
 
 {
