@@ -13,17 +13,16 @@ const { verifyToken } = require('../middleware/VerifyToken.js');
 
 const router = express.Router();
 
-//endpoint akses token
+// routes/UserRoute.js
 router.get('/token', refreshToken);
-//endpoin auth
 router.post('/login', loginHandler);
 router.delete('/logout', logout);
 
-//endpoint data biasa
-router.post("/register", createUser); //tambah user
-router.get("/users", verifyToken, getUsers);
-router.get("/users/:id", verifyToken, getUserById);
-router.put("/edit-user/:id", verifyToken, updateUser);
-router.delete("/delete-user/:id", deleteUser);
+router.post("/register", createUser); // POST /api/users
+router.get("/", verifyToken, getUsers); // GET /api/users
+router.get("/:id", verifyToken, getUserById); // GET /api/users/:id
+router.put("/edit-user/:id", verifyToken, updateUser); // PUT /api/users/:id
+router.delete("/delete-user/:id", deleteUser); // DELETE /api/users/:id
+
 
 module.exports = router;

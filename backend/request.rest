@@ -1,9 +1,7 @@
-GET http://localhost:5000/users
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NywibmFtZSI6ImJlYmFzIiwiZW1haWwiOiJiZWJhc0BnbWFpbCIsImdlbmRlciI6ImJlYmFzIiwiY3JlYXRlZEF0IjoiMjAyNS0wNS0wNVQwNzozOTo0My4wMDBaIiwidXBkYXRlZEF0IjoiMjAyNS0wNS0wNVQwNzo0NDo0OC4wMDBaIiwiaWF0IjoxNzQ2NDMxMDk4LCJleHAiOjE3NDY0MzExMjh9.icgsUQPyZW_NDbECYiPsOo70MVkQOlnG1lzAHPDhJgs
+GET http://localhost:5000/api/users 
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibmFtZSI6ImJlYmFzIiwiZW1haWwiOiJiZWJhc0BnbWFpbCIsImdlbmRlciI6ImJlYmFzIiwiY3JlYXRlZEF0IjoiMjAyNS0wNS0wOFQwMzoxODoxOC4wMDBaIiwidXBkYXRlZEF0IjoiMjAyNS0wNS0xNlQxMzoxNDowMC4wMDBaIiwiaWF0IjoxNzQ3NDAyNDI1LCJleHAiOjE3NDc0ODg4MjV9.oEsg1JlJO15jO3M1yA2uPukVxn0ZiKbTaS59hAiwR8o
 
-###
-
-POST http://localhost:5000/register
+POST http://localhost:5000/api/users/register
 Content-Type: application/json
 
 {
@@ -15,7 +13,7 @@ Content-Type: application/json
 
 ###
 
-POST http://localhost:5000/login
+POST http://localhost:5000/api/users/login
 Content-Type: application/json
 
 {
@@ -24,6 +22,24 @@ Content-Type: application/json
 }
 
 ###
+
+PUT http://localhost:5000/api/users/edit-user/3
+Content-Type: application/json
+
+{
+    "name": "bebas updated",
+    "email": "bebas_updated@gmail.com",
+    "gender": "bebas updated",
+    "password": "bebas123"
+}
+
+###
+
+DELETE http://localhost:5000/api/users/2
+
+###
+
+# endpoint kebawah ini tidak digunakan, alias salah, 404 indikasi endpoin salah
 
 POST http://localhost:5000/add-user 
 Content-Type: application/json
@@ -36,7 +52,7 @@ Content-Type: application/json
 
 ### 
 
-PUT http://localhost:5000/edit-user/14
+PUT http://localhost:5000/edit-user/1
 Content-Type: application/json
 
 {

@@ -43,36 +43,58 @@ async function createUser(req, res) {
 async function updateUser(req, res) {
   try {
     const { name, email, gender, password } = req.body;
+
+    // Memeriksa apakah user dengan ID yang diminta ada
+    const user = await User.findOne({
+      where: { id: req.params.id },
+    });
+
+    if (!user) {
+      return res.status(404).json({
+        status: "failed",
+        message: "User tidak ditemukan",
+      });
+    }
+
     let updatedData = {
       name,
       email,
       gender,
-    }; //nyimpen jadi object
+    };
 
     if (password) {
       const encryptPassword = await bcrypt.hash(password, 5);
       updatedData.password = encryptPassword;
     }
 
+    // Melakukan update pada user
     const result = await User.update(updatedData, {
       where: {
         id: req.params.id,
       },
     });
 
-    // Periksa apakah ada baris yang terpengaruh (diupdate)
     if (result[0] === 0) {
       return res.status(404).json({
         status: "failed",
         message: "User tidak ditemukan atau tidak ada data yang berubah",
-        updatedData: updatedData,
+        updatedData,
         result,
       });
     }
 
-    res.status(200).json({ msg: "User Updated" });
+    res.status(200).json({
+      msg: "User Updated",
+      updatedData,
+      result,
+    });
   } catch (error) {
-    console.log(error.message);
+    console.error("Error during user update:", error);
+    return res.status(500).json({
+      status: "failed",
+      message: "Internal server error",
+      error: error.message,
+    });
   }
 }
 
@@ -104,17 +126,28 @@ async function loginHandler(req, res) {
 
       const decryptPassword = await bcrypt.compare(password, user.password);
       if (decryptPassword) {
-        const accessToken = jwt.sign(safeUserData, process.env.ACCESS_TOKEN_SECRET, {
-          expiresIn: "30s",
-        });
-        const refreshToken = jwt.sign(safeUserData, process.env.REFRESH_TOKEN_SECRET, {
-          expiresIn: "1d",
-        });
-        await User.update({ refresh_token: refreshToken }, {
-          where: {
-            id: user.id,
-          },
-        });
+        const accessToken = jwt.sign(
+          safeUserData,
+          process.env.ACCESS_TOKEN_SECRET,
+          {
+            expiresIn: "30s",
+          }
+        );
+        const refreshToken = jwt.sign(
+          safeUserData,
+          process.env.REFRESH_TOKEN_SECRET,
+          {
+            expiresIn: "1d",
+          }
+        );
+        await User.update(
+          { refresh_token: refreshToken },
+          {
+            where: {
+              id: user.id,
+            },
+          }
+        );
         res.cookie("refreshToken", refreshToken, {
           httpOnly: false, //ngatur cross-site scripting, untuk penggunaan asli aktifkan karena bisa nyegah serangan fetch data dari website "document.cookies"
           sameSite: "lax", //ini ngatur domain yg request misal kalo strict cuman bisa akseske link dari dan menuju domain yg sama, lax itu bisa dari domain lain tapi cuman bisa get
@@ -158,13 +191,24 @@ async function logout(req, res) {
   });
   if (!user.refresh_token) return res.sendStatus(403);
   const userId = user.id;
-  await User.update({ refresh_token: null }, {
-    where: {
-      id: userId,
-    },
-  });
+  await User.update(
+    { refresh_token: null },
+    {
+      where: {
+        id: userId,
+      },
+    }
+  );
   res.clearCookie("refreshToken"); //ngehapus cookies yg tersimpan
   return res.sendStatus(200);
 }
 
-module.exports = { getUsers, getUserById, createUser, updateUser, deleteUser, loginHandler, logout };
+module.exports = {
+  getUsers,
+  getUserById,
+  createUser,
+  updateUser,
+  deleteUser,
+  loginHandler,
+  logout,
+};
