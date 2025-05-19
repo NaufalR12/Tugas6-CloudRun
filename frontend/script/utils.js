@@ -39,7 +39,7 @@ export async function ensureValidAccessToken() {
   // Jika expired, coba refresh
   try {
     const res = await axios.post(
-      "https://backend-nopal-dot-b-08-450940949397.us-central1.run.app/api/users/refresh",
+      "https://backend-nopal-505940949397.us-central1.run.app/api/users/refresh",
       {},
       { withCredentials: true }
     );

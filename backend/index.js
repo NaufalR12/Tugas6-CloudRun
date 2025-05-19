@@ -14,6 +14,7 @@ app.options('*', cors({
   origin: 'https://frontend-nopal-dot-b-08-450916.uc.r.appspot.com',
   credentials: true
 }));
+
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use("/api/note", noteRouter);
@@ -21,4 +22,4 @@ app.use("/api/users", userRouter);
 
 const PORT = 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-//tes update
+
