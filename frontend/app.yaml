@@ -14,4 +14,4 @@ handlers:
       Access-Control-Allow-Origin: "https://frontend-nopal-dot-b-08-450916.uc.r.appspot.com"
       Access-Control-Allow-Methods: "GET, POST, PUT, DELETE, OPTIONS"
       Access-Control-Allow-Headers: "Content-Type, Authorization"
-      Access-Control-Allow-Credentials: "tru
+      Access-Control-Allow-Credentials: "true"
