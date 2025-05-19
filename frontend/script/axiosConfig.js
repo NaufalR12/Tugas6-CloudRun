@@ -1,6 +1,23 @@
 const apiUserUrl = "https://backend-nopal-505940949397.us-central1.run.app/api/users";
 const tokenKey = "accessToken";
 
+// Fungsi untuk mengatur token
+const setAuthToken = (token) => {
+  if (token) {
+    localStorage.setItem(tokenKey, token);
+    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  } else {
+    localStorage.removeItem(tokenKey);
+    delete axios.defaults.headers.common["Authorization"];
+  }
+};
+
+// Set token awal jika ada
+const token = localStorage.getItem(tokenKey);
+if (token) {
+  setAuthToken(token);
+}
+
 // Konfigurasi default untuk Axios
 axios.defaults.withCredentials = true;
 axios.defaults.headers.common['Content-Type'] = 'application/json';
@@ -31,15 +48,15 @@ axios.interceptors.response.use(
         
         const newToken = res.data.accessToken;
         if (newToken) {
-          localStorage.setItem(tokenKey, newToken);
-          axios.defaults.headers.common["Authorization"] = `Bearer ${newToken}`;
+          setAuthToken(newToken);
           originalRequest.headers["Authorization"] = `Bearer ${newToken}`;
           return axios(originalRequest);
         }
       } catch (refreshError) {
         console.error("Refresh token error:", refreshError);
-        localStorage.removeItem(tokenKey);
-        window.location.href = '/'; // Redirect ke halaman login
+        setAuthToken(null);
+        // Redirect ke halaman login dengan pesan error
+        window.location.href = '/?error=session_expired';
         return Promise.reject(refreshError);
       }
     }
