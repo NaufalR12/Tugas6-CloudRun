@@ -15,8 +15,6 @@ const { refreshToken } = require('../controller/refreshToken.js');
 const { verifyToken } = require('../middleware/VerifyToken.js');
 
 
-
-// routes/UserRoute.js
 router.get('/token', refreshToken);
 router.post('/login', loginHandler);
 router.delete('/logout', logout);
