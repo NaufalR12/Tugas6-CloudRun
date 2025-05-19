@@ -8,7 +8,8 @@ async function getUsers(req, res) {
     const response = await User.findAll();
     res.status(200).json(response);
   } catch (error) {
-    console.log(error.message);
+    console.error("Error getting users:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 }
 
@@ -16,35 +17,38 @@ async function getUsers(req, res) {
 async function getUserById(req, res) {
   try {
     const response = await User.findOne({ where: { id: req.params.id } });
+    if (!response) {
+      return res.status(404).json({ message: "User not found" });
+    }
     res.status(200).json(response);
   } catch (error) {
-    console.log(error.message);
+    console.error("Error getting user:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 }
 
-// REGISTER //baru nambahin pasword dan bcrypt
+// REGISTER
 async function createUser(req, res) {
   try {
     const { name, email, gender, password } = req.body;
-    const encryptPassword = await bcrypt.hash(password, 5);
+    const encryptPassword = await bcrypt.hash(password, 10);
     await User.create({
       name: name,
       email: email,
       gender: gender,
       password: encryptPassword,
     });
-    res.status(201).json({ msg: "Register Berhasil" });
+    res.status(201).json({ message: "Register Berhasil" });
   } catch (error) {
-    console.log(error.message);
+    console.error("Error creating user:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 }
 
-//baru nambahin case password
 async function updateUser(req, res) {
   try {
     const { name, email, gender, password } = req.body;
 
-    // Memeriksa apakah user dengan ID yang diminta ada
     const user = await User.findOne({
       where: { id: req.params.id },
     });
@@ -63,11 +67,10 @@ async function updateUser(req, res) {
     };
 
     if (password) {
-      const encryptPassword = await bcrypt.hash(password, 5);
+      const encryptPassword = await bcrypt.hash(password, 10);
       updatedData.password = encryptPassword;
     }
 
-    // Melakukan update pada user
     const result = await User.update(updatedData, {
       where: {
         id: req.params.id,
@@ -78,36 +81,35 @@ async function updateUser(req, res) {
       return res.status(404).json({
         status: "failed",
         message: "User tidak ditemukan atau tidak ada data yang berubah",
-        updatedData,
-        result,
       });
     }
 
     res.status(200).json({
-      msg: "User Updated",
-      updatedData,
-      result,
+      status: "success",
+      message: "User Updated",
     });
   } catch (error) {
     console.error("Error during user update:", error);
-    return res.status(500).json({
+    res.status(500).json({
       status: "failed",
       message: "Internal server error",
-      error: error.message,
     });
   }
 }
 
 async function deleteUser(req, res) {
   try {
-    await User.destroy({ where: { id: req.params.id } });
-    res.status(201).json({ msg: "User Deleted" });
+    const result = await User.destroy({ where: { id: req.params.id } });
+    if (result === 0) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    res.status(200).json({ message: "User Deleted" });
   } catch (error) {
-    console.log(error.message);
+    console.error("Error deleting user:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 }
 
-//Nambah fungsi buat login handler
 async function loginHandler(req, res) {
   try {
     const { email, password } = req.body;
@@ -117,87 +119,107 @@ async function loginHandler(req, res) {
       },
     });
 
-    if (user) {
-      const userPlain = user.toJSON(); // Konversi ke object
-      const { password: _, refresh_token: __, ...safeUserData } = userPlain;
-
-      const decryptPassword = await bcrypt.compare(password, user.password);
-      if (decryptPassword) {
-        const accessToken = jwt.sign(
-          safeUserData,
-          process.env.ACCESS_TOKEN_SECRET,
-          {
-            expiresIn: "30s",
-          }
-        );
-        const refreshToken = jwt.sign(
-          safeUserData,
-          process.env.REFRESH_TOKEN_SECRET,
-          {
-            expiresIn: "1d",
-          }
-        );
-        await User.update(
-          { refresh_token: refreshToken },
-          {
-            where: {
-              id: user.id,
-            },
-          }
-        );
-        res.cookie("refreshToken", refreshToken, {
-          httpOnly: false, //ngatur cross-site scripting, untuk penggunaan asli aktifkan karena bisa nyegah serangan fetch data dari website "document.cookies"
-          sameSite: "lax", //ini ngatur domain yg request misal kalo strict cuman bisa akseske link dari dan menuju domain yg sama, lax itu bisa dari domain lain tapi cuman bisa get
-          maxAge: 24 * 60 * 60 * 1000,
-          secure: false, //ini ngirim cookies cuman bisa dari https, kenapa? nyegah skema MITM di jaringan publik, tapi pas development di false in aja
-        });
-        res.status(200).json({
-          status: "Succes",
-          message: "Login Berhasil",
-          safeUserData,
-          accessToken,
-        });
-      } else {
-        res.status(400).json({
-          status: "Failed",
-          message: "Password atau email salah",
-        });
-      }
-    } else {
-      res.status(400).json({
+    if (!user) {
+      return res.status(400).json({
         status: "Failed",
-        message: "Password atau email salah",
+        message: "Email atau password salah",
       });
     }
+
+    const userPlain = user.toJSON();
+    const { password: _, refresh_token: __, ...safeUserData } = userPlain;
+
+    const decryptPassword = await bcrypt.compare(password, user.password);
+    if (!decryptPassword) {
+      return res.status(400).json({
+        status: "Failed",
+        message: "Email atau password salah",
+      });
+    }
+
+    const accessToken = jwt.sign(
+      safeUserData,
+      process.env.ACCESS_TOKEN_SECRET,
+      {
+        expiresIn: "5m",
+      }
+    );
+    const refreshToken = jwt.sign(
+      safeUserData,
+      process.env.REFRESH_TOKEN_SECRET,
+      {
+        expiresIn: "1d",
+      }
+    );
+
+    await User.update(
+      { refresh_token: refreshToken },
+      {
+        where: {
+          id: user.id,
+        },
+      }
+    );
+
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      sameSite: "none",
+      maxAge: 24 * 60 * 60 * 1000,
+      secure: true,
+    });
+
+    res.status(200).json({
+      status: "Success",
+      message: "Login Berhasil",
+      safeUserData,
+      accessToken,
+    });
   } catch (error) {
-    res.status(error.statusCode || 500).json({
+    console.error("Login error:", error);
+    res.status(500).json({
       status: "error",
-      message: error.message,
+      message: "Internal server error",
     });
   }
 }
 
-//nambah logout
 async function logout(req, res) {
-  const refreshToken = req.cookies.refreshToken; //mgecek refresh token sama gak sama di database
-  if (!refreshToken) return res.sendStatus(401);
-  const user = await User.findOne({
-    where: {
-      refresh_token: refreshToken,
-    },
-  });
-  if (!user.refresh_token) return res.sendStatus(403);
-  const userId = user.id;
-  await User.update(
-    { refresh_token: null },
-    {
-      where: {
-        id: userId,
-      },
+  try {
+    const refreshToken = req.cookies.refreshToken;
+    if (!refreshToken) {
+      return res.status(401).json({ message: "No refresh token" });
     }
-  );
-  res.clearCookie("refreshToken"); //ngehapus cookies yg tersimpan
-  return res.sendStatus(200);
+
+    const user = await User.findOne({
+      where: {
+        refresh_token: refreshToken,
+      },
+    });
+
+    if (!user) {
+      return res.status(403).json({ message: "Invalid refresh token" });
+    }
+
+    await User.update(
+      { refresh_token: null },
+      {
+        where: {
+          id: user.id,
+        },
+      }
+    );
+
+    res.clearCookie("refreshToken", {
+      httpOnly: true,
+      sameSite: "none",
+      secure: true,
+    });
+
+    res.status(200).json({ message: "Logout successful" });
+  } catch (error) {
+    console.error("Logout error:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
 }
 
 module.exports = {
