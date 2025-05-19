@@ -22,7 +22,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Routes
 app.use("/api/users", userRouter);
-app.use("/api", noteRouter);
+app.use("/api/notes", noteRouter);
 
 // Health check endpoint
 app.get("/health", (req, res) => {
