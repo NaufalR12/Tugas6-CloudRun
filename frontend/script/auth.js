@@ -90,7 +90,13 @@ function setupAuthEventListeners(showNotesAppCallback) {
     }
 
     axios
-      .post(`${apiUserUrl}/login`, { email, password })
+      .post(`${apiUserUrl}/login`, { email, password }, {
+        withCredentials: true,
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        }
+      })
       .then((res) => {
         const token = res.data.accessToken;
         if (!token) throw new Error("Token tidak ditemukan di response.");
@@ -99,6 +105,7 @@ function setupAuthEventListeners(showNotesAppCallback) {
         showNotesAppCallback();
       })
       .catch((err) => {
+        console.error("Login error:", err);
         alert("Login gagal: " + (err.response?.data?.message || err.message));
       });
   });

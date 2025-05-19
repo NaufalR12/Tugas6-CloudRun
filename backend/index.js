@@ -6,11 +6,18 @@ const userRouter = require("./routes/UserRoute");
 const cookieParser = require("cookie-parser");
 const app = express();
 
-// Konfigurasi CORS yang lebih sederhana
+// Konfigurasi CORS yang lebih lengkap
 app.use(cors({
-  origin: true, // Izinkan semua origin untuk sementara
-  credentials: true
+  origin: "https://frontend-nopal-dot-b-08-450916.uc.r.appspot.com",
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'Origin', 'X-Requested-With'],
+  exposedHeaders: ['Content-Range', 'X-Content-Range'],
+  maxAge: 86400
 }));
+
+// Middleware untuk menangani preflight request
+app.options('*', cors());
 
 // Middleware lainnya
 app.use(bodyParser.json());
