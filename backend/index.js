@@ -18,16 +18,15 @@ const corsOptions = {
   optionsSuccessStatus: 204
 };
 
-// Terapkan CORS ke semua routes
+// Terapkan middleware
 app.use(cors(corsOptions));
-
-// Middleware lainnya
-app.use(bodyParser.json());
 app.use(cookieParser());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // Routes
-app.use("/api/note", noteRouter);
 app.use("/api/users", userRouter);
+app.use("/api", noteRouter);
 
 // Health check endpoint
 app.get("/health", (req, res) => {

@@ -34,6 +34,7 @@ axios.interceptors.response.use(
       originalRequest._retry = true;
       
       try {
+        // Pastikan denganCredentials diatur untuk request refresh
         const res = await axios.post(
           `${apiUserUrl}/refresh`,
           {},
@@ -51,6 +52,8 @@ axios.interceptors.response.use(
           setAuthToken(newToken);
           originalRequest.headers["Authorization"] = `Bearer ${newToken}`;
           return axios(originalRequest);
+        } else {
+          throw new Error('No new token received');
         }
       } catch (refreshError) {
         console.error("Refresh token error:", refreshError);

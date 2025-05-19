@@ -14,8 +14,8 @@ const {
 const { refreshToken } = require('../controller/refreshToken.js');
 const { verifyToken } = require('../middleware/VerifyToken.js');
 
-
-router.get('/token', refreshToken);
+// Gunakan implementasi refreshToken dari controller
+router.post('/refresh', refreshToken);
 router.post('/login', loginHandler);
 router.delete('/logout', logout);
 
