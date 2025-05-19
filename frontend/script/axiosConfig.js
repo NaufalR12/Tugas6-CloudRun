@@ -1,5 +1,4 @@
-// axiosConfig.js
-import axios from "axios";
+
 
 const apiUserUrl = "https://backend-nopal-505940949397.us-central1.run.app/api/users";
 const tokenKey = "accessToken";
