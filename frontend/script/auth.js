@@ -94,7 +94,8 @@ function setupAuthEventListeners(showNotesAppCallback) {
         withCredentials: true,
         headers: {
           'Content-Type': 'application/json',
-          'Accept': 'application/json'
+          'Accept': 'application/json',
+          'Origin': window.location.origin
         }
       })
       .then((res) => {
@@ -106,7 +107,11 @@ function setupAuthEventListeners(showNotesAppCallback) {
       })
       .catch((err) => {
         console.error("Login error:", err);
-        alert("Login gagal: " + (err.response?.data?.message || err.message));
+        if (err.code === 'ERR_NETWORK') {
+          alert("Tidak dapat terhubung ke server. Silakan coba lagi nanti.");
+        } else {
+          alert("Login gagal: " + (err.response?.data?.message || err.message));
+        }
       });
   });
 
