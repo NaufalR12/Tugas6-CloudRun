@@ -5,7 +5,10 @@ const noteRouter = require("./routes/NoteRoute");
 const userRouter = require("./routes/UserRoute");
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: 'https://frontend-nopal-dot-b-08-450916.uc.r.appspot.com',
+  credentials: true
+}));
 app.use(bodyParser.json());
 app.use("/api/note", noteRouter);
 app.use("/api/users", userRouter);
