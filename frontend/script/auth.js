@@ -89,15 +89,17 @@ function setupAuthEventListeners(showNotesAppCallback) {
       return;
     }
 
+    // Konfigurasi axios untuk login
+    const loginConfig = {
+      withCredentials: true,
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      }
+    };
+
     axios
-      .post(`${apiUserUrl}/login`, { email, password }, {
-        withCredentials: true,
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'Origin': window.location.origin
-        }
-      })
+      .post(`${apiUserUrl}/login`, { email, password }, loginConfig)
       .then((res) => {
         const token = res.data.accessToken;
         if (!token) throw new Error("Token tidak ditemukan di response.");
@@ -118,9 +120,8 @@ function setupAuthEventListeners(showNotesAppCallback) {
   // LOGOUT
   logoutBtn.addEventListener("click", async () => {
     try {
-      await fetch(`${apiUserUrl}/logout`, {
-        method: "DELETE",
-        credentials: "include",
+      await axios.delete(`${apiUserUrl}/logout`, {
+        withCredentials: true
       });
     } catch (err) {
       console.error("Logout failed:", err);
