@@ -118,9 +118,6 @@ async function loginHandler(req, res) {
     });
 
     if (user) {
-      //Data User itu nanti bakalan dipake buat ngesign token kan
-      // data user dari sequelize itu harus diubah dulu ke bentuk object
-      //Safeuserdata dipake biar lebih dinamis, jadi dia masukin semua data user kecuali data-data sensitifnya  karena bisa didecode kayak password caranya gini :
       const userPlain = user.toJSON(); // Konversi ke object
       const { password: _, refresh_token: __, ...safeUserData } = userPlain;
 

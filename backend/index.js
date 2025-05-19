@@ -3,13 +3,16 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const noteRouter = require("./routes/NoteRoute");
 const userRouter = require("./routes/UserRoute");
-
+const cookieParser = require("cookie-parser");
 const app = express();
+
 app.use(cors({
   origin: 'https://frontend-nopal-dot-b-08-450916.uc.r.appspot.com',
   credentials: true
 }));
 app.use(bodyParser.json());
+
+app.use(cookieParser());
 app.use("/api/note", noteRouter);
 app.use("/api/users", userRouter);
 
