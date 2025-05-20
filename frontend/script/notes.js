@@ -34,109 +34,111 @@ function closeNoteForm() {
   noteForm.classList.add("hidden");
 }
 
-function loadNotes(searchQuery = "") {
-  setAuthHeader();
-  axios
-    .get(`${apiNotesUrl}/`)
-    .then((res) => {
-      const query = searchQuery.toLowerCase();
-      const colors = [
-        "bg-blue-800",
-        "bg-green-800",
-        "bg-red-800",
-        "bg-yellow-800",
-        "bg-purple-800",
-        "bg-indigo-800",
-        "bg-pink-800",
-        "bg-blue-600",
-        "bg-green-600",
-        "bg-red-600",
-        "bg-yellow-600",
-        "bg-purple-600",
-        "bg-indigo-600",
-        "bg-pink-600",
-      ];
-      let noteColors = JSON.parse(sessionStorage.getItem("noteColors")) || {};
-      let availableColors = JSON.parse(
-        sessionStorage.getItem("availableColors")
-      ) || [...colors];
-      function getUniqueColor() {
-        if (availableColors.length === 0) {
-          availableColors = [...colors];
-        }
-        const colorIndex = Math.floor(Math.random() * availableColors.length);
-        return availableColors.splice(colorIndex, 1)[0];
+async function loadNotes(searchQuery = "") {
+  try {
+    setAuthHeader();
+    const res = await axios.get(`${apiNotesUrl}/`);
+    
+    const query = searchQuery.toLowerCase();
+    const colors = [
+      "bg-blue-800",
+      "bg-green-800",
+      "bg-red-800",
+      "bg-yellow-800",
+      "bg-purple-800",
+      "bg-indigo-800",
+      "bg-pink-800",
+      "bg-blue-600",
+      "bg-green-600",
+      "bg-red-600",
+      "bg-yellow-600",
+      "bg-purple-600",
+      "bg-indigo-600",
+      "bg-pink-600",
+    ];
+    let noteColors = JSON.parse(sessionStorage.getItem("noteColors")) || {};
+    let availableColors = JSON.parse(
+      sessionStorage.getItem("availableColors")
+    ) || [...colors];
+    function getUniqueColor() {
+      if (availableColors.length === 0) {
+        availableColors = [...colors];
       }
-      let notes = res.data || [];
-      if (query) {
-        notes = notes.filter(
-          (note) =>
-            (note.title && note.title.toLowerCase().includes(query)) ||
-            (note.content && note.content.toLowerCase().includes(query))
-        );
-      }
-      notesContainer.innerHTML = "";
-      notes.forEach((note) => {
-        if (!noteColors[note.id]) {
-          noteColors[note.id] = getUniqueColor();
-        }
-        const noteDiv = document.createElement("div");
-        noteDiv.className = `${noteColors[note.id]} p-4 rounded-lg flex flex-col h-auto`;
-        noteDiv.innerHTML = `
-          <h3 class="text-lg font-bold">${note.title}</h3>
-          <div class="note-content grow break-words">${marked.parse(
-            note.content
-          )}</div>
-          <small class="mt-2 block text-white">${formatDate(
-            note.created_at
-          )}</small>
-          <div class="flex justify-end space-x-2 mt-2">
-            <button class="edit-btn text-blue-400 hover:text-yellow-300" data-id="${note.id}" data-title="${note.title}" data-content="${encodeURIComponent(note.content)}">
-              <i class="fas fa-pen"></i>
-            </button>
-            <button class="delete-btn text-red-700 hover:text-red-400" data-id="${note.id}">
-              <i class="fas fa-trash"></i>
-            </button>
-          </div>
-        `;
-        notesContainer.appendChild(noteDiv);
-      });
-
-      // Tambahkan event listener untuk tombol edit dan delete
-      document.querySelectorAll('.edit-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const id = btn.dataset.id;
-          const title = btn.dataset.title;
-          const content = btn.dataset.content;
-          editNote(id, title, content);
-        });
-      });
-
-      document.querySelectorAll('.delete-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const id = btn.dataset.id;
-          deleteNote(id);
-        });
-      });
-
-      sessionStorage.setItem("noteColors", JSON.stringify(noteColors));
-      sessionStorage.setItem(
-        "availableColors",
-        JSON.stringify(availableColors)
+      const colorIndex = Math.floor(Math.random() * availableColors.length);
+      return availableColors.splice(colorIndex, 1)[0];
+    }
+    let notes = res.data || [];
+    if (query) {
+      notes = notes.filter(
+        (note) =>
+          (note.title && note.title.toLowerCase().includes(query)) ||
+          (note.content && note.content.toLowerCase().includes(query))
       );
-    })
-    .catch((err) => {
-      if (err.response && err.response.status === 404) {
-        alert("Gagal memuat catatan: Endpoint tidak ditemukan (404).");
-      } else if (err.code === "ERR_NETWORK") {
-        alert("Tidak dapat terhubung ke backend.");
-      } else {
-        alert(
-          "Gagal memuat catatan: " +
-            (err.response?.data?.message || err.message)
-        );
+    }
+    notesContainer.innerHTML = "";
+    notes.forEach((note) => {
+      if (!noteColors[note.id]) {
+        noteColors[note.id] = getUniqueColor();
       }
+      const noteDiv = document.createElement("div");
+      noteDiv.className = `${noteColors[note.id]} p-4 rounded-lg flex flex-col h-auto`;
+      noteDiv.innerHTML = `
+        <h3 class="text-lg font-bold">${note.title}</h3>
+        <div class="note-content grow break-words">${marked.parse(
+          note.content
+        )}</div>
+        <small class="mt-2 block text-white">${formatDate(
+          note.created_at
+        )}</small>
+        <div class="flex justify-end space-x-2 mt-2">
+          <button class="edit-btn text-blue-400 hover:text-yellow-300" data-id="${note.id}" data-title="${note.title}" data-content="${encodeURIComponent(note.content)}">
+            <i class="fas fa-pen"></i>
+          </button>
+          <button class="delete-btn text-red-700 hover:text-red-400" data-id="${note.id}">
+            <i class="fas fa-trash"></i>
+          </button>
+        </div>
+      `;
+      notesContainer.appendChild(noteDiv);
     });
+
+    // Tambahkan event listener untuk tombol edit dan delete
+    document.querySelectorAll('.edit-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.dataset.id;
+        const title = btn.dataset.title;
+        const content = btn.dataset.content;
+        editNote(id, title, content);
+      });
+    });
+
+    document.querySelectorAll('.delete-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.dataset.id;
+        deleteNote(id);
+      });
+    });
+
+    sessionStorage.setItem("noteColors", JSON.stringify(noteColors));
+    sessionStorage.setItem(
+      "availableColors",
+      JSON.stringify(availableColors)
+    );
+  } catch (err) {
+    if (err.response && err.response.status === 401) {
+      // Token expired, refresh token akan ditangani oleh axios interceptor
+      console.log("Token expired, mencoba refresh token...");
+    } else if (err.response && err.response.status === 404) {
+      alert("Gagal memuat catatan: Endpoint tidak ditemukan (404).");
+    } else if (err.code === "ERR_NETWORK") {
+      alert("Tidak dapat terhubung ke backend.");
+    } else {
+      alert(
+        "Gagal memuat catatan: " +
+          (err.response?.data?.message || err.message)
+      );
+    }
+  }
 }
 
 function saveNote() {
