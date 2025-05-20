@@ -6,29 +6,19 @@ const userRouter = require("./routes/UserRoute");
 const cookieParser = require("cookie-parser");
 const app = express();
 
-// Middleware untuk menangani CORS
-app.use((req, res, next) => {
-  const allowedOrigins = [
-    'https://frontend-nopal-dot-b-08-450916.uc.r.appspot.com'
-  ];
-  const origin = req.headers.origin;
-  
-  if (allowedOrigins.includes(origin)) {
-    res.setHeader('Access-Control-Allow-Origin', origin);
-  }
-  
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, Accept, Origin, X-Requested-With');
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
-  res.setHeader('Access-Control-Expose-Headers', 'Content-Range, X-Content-Range');
-  
-  // Handle preflight requests
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
-  
-  next();
-});
+// CORS configuration
+const corsOptions = {
+  origin: [
+    'https://frontend-nopal-dot-b-08-450916.uc.r.appspot.com',
+    'http://localhost:3000'
+  ],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'Origin', 'X-Requested-With'],
+  credentials: true,
+  exposedHeaders: ['Content-Range', 'X-Content-Range']
+};
+
+app.use(cors(corsOptions));
 
 // Terapkan middleware
 app.use(cookieParser());
