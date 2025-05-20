@@ -75,11 +75,25 @@
       <div id="registerForm" class="hidden mt-6">
         <h2 class="text-2xl mb-4 font-bold">Register</h2>
         <input
-          id="registerUsername"
+          id="registerName"
           type="text"
-          placeholder="Username"
+          placeholder="Nama Lengkap"
           class="w-full p-2 mb-3 rounded bg-gray-700 text-white"
         />
+        <input
+          id="registerEmail"
+          type="email"
+          placeholder="Email"
+          class="w-full p-2 mb-3 rounded bg-gray-700 text-white"
+        />
+        <select
+          id="registerGender"
+          class="w-full p-2 mb-3 rounded bg-gray-700 text-white"
+        >
+          <option value="">Pilih Jenis Kelamin</option>
+          <option value="Laki-laki">Laki-laki</option>
+          <option value="Perempuan">Perempuan</option>
+        </select>
         <input
           id="registerPassword"
           type="password"

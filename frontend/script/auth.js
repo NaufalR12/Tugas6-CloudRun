@@ -15,7 +15,9 @@ const loginBtn = document.getElementById("loginBtn");
 
 // Register elements
 const registerForm = document.getElementById("registerForm");
-const registerUsername = document.getElementById("registerUsername");
+const registerName = document.getElementById("registerName");
+const registerEmail = document.getElementById("registerEmail");
+const registerGender = document.getElementById("registerGender");
 const registerPassword = document.getElementById("registerPassword");
 const registerBtn = document.getElementById("registerBtn");
 const cancelRegisterBtn = document.getElementById("cancelRegisterBtn");
@@ -38,7 +40,9 @@ function showAuth() {
 function clearAuthForms() {
   loginUsername.value = "";
   loginPassword.value = "";
-  registerUsername.value = "";
+  registerName.value = "";
+  registerEmail.value = "";
+  registerGender.value = "";
   registerPassword.value = "";
   registerForm.classList.add("hidden");
   document.getElementById("loginForm").classList.remove("hidden");
@@ -47,16 +51,23 @@ function clearAuthForms() {
 function setupAuthEventListeners(showNotesAppCallback) {
   // REGISTER
   registerBtn.addEventListener("click", () => {
-    const username = registerUsername.value.trim();
+    const name = registerName.value.trim();
+    const email = registerEmail.value.trim();
+    const gender = registerGender.value;
     const password = registerPassword.value.trim();
 
-    if (!username || !password) {
-      alert("Username dan password harus diisi.");
+    if (!name || !email || !gender || !password) {
+      alert("Semua field harus diisi.");
+      return;
+    }
+
+    if (!email.includes('@')) {
+      alert("Email tidak valid.");
       return;
     }
 
     axios
-      .post(`${apiUserUrl}/register`, { username, password })
+      .post(`${apiUserUrl}/register`, { name, email, gender, password })
       .then(() => {
         alert("Register berhasil! Silakan login.");
         registerForm.classList.add("hidden");
