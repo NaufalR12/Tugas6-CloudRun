@@ -37,7 +37,7 @@ function closeNoteForm() {
 function loadNotes(searchQuery = "") {
   setAuthHeader();
   axios
-    .get(`${apiNotesUrl}/notes`)
+    .get(`${apiNotesUrl}/`)
     .then((res) => {
       const query = searchQuery.toLowerCase();
       const colors = [
@@ -135,7 +135,7 @@ function saveNote() {
   }
   if (id) {
     axios
-      .put(`${apiNotesUrl}/${id}`, { title, content })
+      .put(`${apiNotesUrl}/update/${id}`, { title, content })
       .then(() => {
         closeNoteForm();
         loadNotes(searchInput.value.trim());
@@ -148,7 +148,7 @@ function saveNote() {
       });
   } else {
     axios
-      .post(apiNotesUrl, { title, content })
+      .post(`${apiNotesUrl}/add/${id}`, { title, content })
       .then(() => {
         closeNoteForm();
         loadNotes(searchInput.value.trim());
@@ -164,7 +164,7 @@ function saveNote() {
 
 function deleteNote(id) {
   axios
-    .delete(`${apiNotesUrl}/${id}`)
+    .delete(`${apiNotesUrl}/delete/${id}`)
     .then(() => {
       loadNotes(searchInput.value.trim());
     })

@@ -10,9 +10,9 @@ const {
 const { refreshToken } = require('../controller/refreshToken.js');
 const { verifyToken } = require('../middleware/VerifyToken.js');
 
-router.get("/notes", verifyToken, getNotes);
-router.post("/notes", addNote);
-router.put("/notes/:id", updateNote);
-router.delete("/notes/:id", deleteNote);
+router.get("/", verifyToken, getNotes);
+router.post("/add", addNote);
+router.put("/update/:id", updateNote);
+router.delete("/delete/:id", deleteNote);
 
 module.exports = router;
