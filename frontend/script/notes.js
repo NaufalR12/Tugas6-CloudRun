@@ -162,18 +162,29 @@ function saveNote() {
   }
 }
 
+function editNote(id, title, content) {
+  openNoteForm({
+    _id: id,
+    title: title,
+    content: decodeURIComponent(content)
+  });
+}
+
 function deleteNote(id) {
-  axios
-    .delete(`${apiNotesUrl}/delete/${id}`)
-    .then(() => {
-      loadNotes(searchInput.value.trim());
-    })
-    .catch((err) => {
-      alert(
-        "Gagal menghapus catatan: " +
-          (err.response?.data?.message || err.message)
-      );
-    });
+  if (confirm("Apakah Anda yakin ingin menghapus catatan ini?")) {
+    setAuthHeader();
+    axios
+      .delete(`${apiNotesUrl}/delete/${id}`)
+      .then(() => {
+        loadNotes(searchInput.value.trim());
+      })
+      .catch((err) => {
+        alert(
+          "Gagal menghapus catatan: " +
+            (err.response?.data?.message || err.message)
+        );
+      });
+  }
 }
 
 function setupNotesEventListeners() {
@@ -190,5 +201,9 @@ function setupNotesEventListeners() {
     loadNotes(searchInput.value.trim());
   });
 }
+
+// Ekspos fungsi ke global scope
+window.deleteNote = deleteNote;
+window.editNote = editNote;
 
 export { openNoteForm, closeNoteForm, loadNotes, saveNote, deleteNote, setupNotesEventListeners }; 
