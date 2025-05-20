@@ -37,7 +37,7 @@ function closeNoteForm() {
 function loadNotes(searchQuery = "") {
   setAuthHeader();
   axios
-    .get(apiNotesUrl)
+    .get(`${apiNotesUrl}/notes`)
     .then((res) => {
       const query = searchQuery.toLowerCase();
       const colors = [
