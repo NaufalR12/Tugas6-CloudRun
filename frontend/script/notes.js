@@ -91,19 +91,34 @@ function loadNotes(searchQuery = "") {
             note.created_at
           )}</small>
           <div class="flex justify-end space-x-2 mt-2">
-            <button onclick="editNote(${note.id}, '${note.title}', '${encodeURIComponent(
-          note.content
-        )}')" 
-                    class="text-blue-400 hover:text-yellow-300">
+            <button class="edit-btn text-blue-400 hover:text-yellow-300" data-id="${note.id}" data-title="${note.title}" data-content="${encodeURIComponent(note.content)}">
               <i class="fas fa-pen"></i>
             </button>
-            <button onclick="deleteNote(${note.id})" class="text-red-700 hover:text-red-400">
+            <button class="delete-btn text-red-700 hover:text-red-400" data-id="${note.id}">
               <i class="fas fa-trash"></i>
             </button>
           </div>
         `;
         notesContainer.appendChild(noteDiv);
       });
+
+      // Tambahkan event listener untuk tombol edit dan delete
+      document.querySelectorAll('.edit-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const id = btn.dataset.id;
+          const title = btn.dataset.title;
+          const content = btn.dataset.content;
+          editNote(id, title, content);
+        });
+      });
+
+      document.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const id = btn.dataset.id;
+          deleteNote(id);
+        });
+      });
+
       sessionStorage.setItem("noteColors", JSON.stringify(noteColors));
       sessionStorage.setItem(
         "availableColors",
@@ -201,9 +216,5 @@ function setupNotesEventListeners() {
     loadNotes(searchInput.value.trim());
   });
 }
-
-// Ekspos fungsi ke global scope
-window.deleteNote = deleteNote;
-window.editNote = editNote;
 
 export { openNoteForm, closeNoteForm, loadNotes, saveNote, deleteNote, setupNotesEventListeners }; 
