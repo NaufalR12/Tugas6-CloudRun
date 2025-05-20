@@ -6,14 +6,29 @@ const userRouter = require("./routes/UserRoute");
 const cookieParser = require("cookie-parser");
 const app = express();
 
-// Konfigurasi CORS yang lebih permisif untuk debugging
-app.use(cors({
-  origin: true, // Mengizinkan semua origin
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'Origin', 'X-Requested-With'],
-  exposedHeaders: ['Content-Range', 'X-Content-Range']
-}));
+// Middleware untuk menangani CORS
+app.use((req, res, next) => {
+  const allowedOrigins = [
+    'https://frontend-nopal-dot-b-08-450916.uc.r.appspot.com'
+  ];
+  const origin = req.headers.origin;
+  
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  }
+  
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, Accept, Origin, X-Requested-With');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Expose-Headers', 'Content-Range, X-Content-Range');
+  
+  // Handle preflight requests
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+  
+  next();
+});
 
 // Terapkan middleware
 app.use(cookieParser());
