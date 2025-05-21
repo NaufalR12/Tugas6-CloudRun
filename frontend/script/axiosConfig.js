@@ -69,6 +69,7 @@ if (token) {
 axios.defaults.withCredentials = true;
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 axios.defaults.headers.common['Accept'] = 'application/json';
+axios.defaults.headers.common['Access-Control-Allow-Credentials'] = true;
 
 // Flag untuk menandai sedang melakukan refresh token
 let isRefreshing = false;

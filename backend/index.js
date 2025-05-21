@@ -10,12 +10,15 @@ const app = express();
 const corsOptions = {
   origin: [
     'https://frontend-nopal-dot-b-08-450916.uc.r.appspot.com',
-    'http://localhost:3000'
+    'http://localhost:3000',
+    'http://localhost:5000'
   ],
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'Origin', 'X-Requested-With'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'Origin', 'X-Requested-With', 'Cookie'],
   credentials: true,
-  exposedHeaders: ['Content-Range', 'X-Content-Range']
+  exposedHeaders: ['Content-Range', 'X-Content-Range', 'Set-Cookie'],
+  preflightContinue: false,
+  optionsSuccessStatus: 204
 };
 
 app.use(cors(corsOptions));
