@@ -125,10 +125,11 @@ async function loadNotes(searchQuery = "") {
       JSON.stringify(availableColors)
     );
   } catch (err) {
-    if (err.response && err.response.status === 401) {
-      // Token expired, refresh token akan ditangani oleh axios interceptor
-      console.log("Token expired, mencoba refresh token...");
-    } else if (err.response && err.response.status === 404) {
+    console.error("Error loading notes:", err);
+    if (err.response?.status === 401 || err.response?.status === 403) {
+      // Token expired atau invalid, refresh token akan ditangani oleh axios interceptor
+      console.log("Token expired/invalid, mencoba refresh token...");
+    } else if (err.response?.status === 404) {
       alert("Gagal memuat catatan: Endpoint tidak ditemukan (404).");
     } else if (err.code === "ERR_NETWORK") {
       alert("Tidak dapat terhubung ke backend.");
@@ -204,6 +205,8 @@ function deleteNote(id) {
   }
 }
 
+// Tambahkan debounce untuk search input
+let searchTimeout;
 function setupNotesEventListeners() {
   addNoteBtn.addEventListener("click", () => {
     openNoteForm();
@@ -215,7 +218,12 @@ function setupNotesEventListeners() {
     saveNote();
   });
   searchInput.addEventListener("input", () => {
-    loadNotes(searchInput.value.trim());
+    // Clear previous timeout
+    clearTimeout(searchTimeout);
+    // Set new timeout
+    searchTimeout = setTimeout(() => {
+      loadNotes(searchInput.value.trim());
+    }, 500); // Tunggu 500ms setelah user selesai mengetik
   });
 }
 
