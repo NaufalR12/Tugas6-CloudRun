@@ -14,14 +14,21 @@ const corsOptions = {
     'http://localhost:5000'
   ],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'Origin', 'X-Requested-With', 'Cookie'],
-  credentials: true,
+  allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'Origin', 'X-Requested-With'],
   exposedHeaders: ['Content-Range', 'X-Content-Range', 'Set-Cookie'],
+  credentials: true,
   preflightContinue: false,
   optionsSuccessStatus: 204
 };
 
+// Terapkan CORS sebelum middleware lainnya
 app.use(cors(corsOptions));
+
+// Tambahkan header CORS untuk semua response
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Credentials', 'true');
+  next();
+});
 
 // Terapkan middleware
 app.use(cookieParser());
