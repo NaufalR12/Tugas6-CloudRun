@@ -105,7 +105,8 @@ function setupAuthEventListeners(showNotesAppCallback) {
       withCredentials: true,
       headers: {
         'Content-Type': 'application/json',
-        'Accept': 'application/json'
+        'Accept': 'application/json',
+        'Origin': 'https://frontend-nopal-dot-b-08-450916.uc.r.appspot.com'
       }
     };
 
