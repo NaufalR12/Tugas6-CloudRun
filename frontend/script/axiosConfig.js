@@ -2,7 +2,6 @@ const apiUserUrl = "https://backend-nopal-505940949397.us-central1.run.app/api/u
 const tokenKey = "accessToken";
 const refreshTokenKey = "refreshToken";
 
-// Daftar endpoint yang tidak memerlukan autentikasi
 const publicEndpoints = [
   `${apiUserUrl}/register`,
   `${apiUserUrl}/login`,
